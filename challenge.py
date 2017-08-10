@@ -2,18 +2,25 @@
 #coding=utf-8
 #author=yexiaozhu
 
-import re
-def describe(s):
-    sets = re.findall("(1+|2+|3+)", s)
-    return "".join([str(len(x))+x[0] for x in sets])
-s = '1'
-for i in range(30):
-    s = describe(s)
-    print s
-    print len(s)
-# print s
-# print len(s)
-passcodes = str(len(s))
-start_url = 'http://www.pythonchallenge.com/pc/return/bull.html'
-end_url = start_url.replace('bull', passcodes)
-print end_url
+from PIL import Image
+
+im = Image.open("cave.jpg")
+
+width = im.size[0]
+height = im.size[1]
+
+even = Image.new(im.mode, (width / 2, height / 2))
+odd = Image.new(im.mode, (width / 2, height / 2))
+
+for x in range(width):
+    for y in range(height):
+        pixel = im.getpixel((x, y))
+        if x % 2 ^ y % 2:
+            odd.putpixel(((x - 1) / 2, y / 2) if x % 2 else (x / 2, (y - 1) / 2), pixel)
+        else:
+            even.putpixel((x / 2, y / 2), pixel)
+even.save('cave_even.jpg')
+odd.save('cave_odd.jpg')
+start_url = 'http://www.pythonchallenge.com/pc/return/5808.html'
+# end_url = start_url.replace('bull', passcodes)
+# print end_url
