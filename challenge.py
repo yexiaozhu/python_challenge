@@ -2,43 +2,16 @@
 #coding=utf-8
 #author=yexiaozhu
 
-import Image
+# second youngest
+# 1**6.1.27. it might be a birthday, beacuse we should buy flower for that day.
+from calendar import isleap
+from datetime import date
+TUESDAY = 1
+for year in range(1006, 2000, 10):
+    t = date(year, 1, 27)
+    if isleap(year) and t.weekday() == TUESDAY:
+        print t.isoformat()
 
-im = Image.open('wire.png')
-new = Image.new('RGB', (100, 100), 'black')
-
-count = 0
-flag = 0
-max = 99
-line = 1
-x = 0
-y = 0
-for i in range(10000):
-    new.putpixel((x, y), im.getpixel((count, 0)))
-    if (flag == 0):
-        x += 1
-    elif flag == 1:
-        y += 1
-    elif flag == 2:
-        x -= 1
-    else:
-        y -= 1
-
-    if (line == max):
-        flag += 1
-        line = 1
-        if flag == 4:
-            flag = 0
-            max -= 2
-            y += 1
-            x += 1
-    else:
-        line += 1
-
-    count += 1
-
-new.save('out14.png')
-
-start_url = 'http://www.pythonchallenge.com/pc/return/italy.html'
+start_url = 'http://www.pythonchallenge.com/pc/return/cat.html'
 # end_url = start_url.replace('bull', passcodes)
 # print end_url
