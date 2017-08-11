@@ -1,0 +1,10 @@
+status: 200
+content-location: http://www.pythonchallenge.com/pc/def/linkedlist.php?busynothing=21412
+set-cookie: info=V; expires=Fri, 18-Aug-2017 06:54:01 GMT; Max-Age=604800;
+ path=/; domain=.pythonchallenge.com
+server: lighttpd/1.4.35
+connection: close
+date: Fri, 11 Aug 2017 06:54:01 GMT
+content-type: text/html; charset=UTF-8
+
+and the next busynothing is 55205

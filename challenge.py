@@ -2,19 +2,36 @@
 #coding=utf-8
 #author=yexiaozhu
 
-import Image
+# import re, bz2, urllib2, urllib, cookielib
+#
+# info = []
+# cookies = cookielib.CookieJar()
+# opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
+# urllib2.install_opener(opener)
+#
+# nothing = str(12345)
+# for i in range(400):
+#     path = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?busynothing='
+#     text = urllib.urlopen(path + nothing).read()
+#     r = urllib2.Request(path + nothing)
+#     yy = str(urllib2.urlopen(r).info())
+#     info.append((re.findall('info=(.{0,4});', yy)))
+#     a = re.findall(r'(\d+)', text)
+#     print i, text ,info
+#     if a == []:
+#         break
+#     nothing = str(a[len(a) - 1])
+#
+# s = ''.join([k for i in info for k in i])
+# print s
+# print bz2.decompress(urllib.unquote_plus(s))
+from urllib2 import Request, urlopen
+from urllib import quote_plus
 
-im = Image.open("mozart.gif")
-for y in range(im.size[1]):
-    #获得像素点
-    line=[im.getpixel((x, y)) for x in range(im.size[0])]
-    idx=line.index(195)
-    line=line[idx:]+line[:idx]
-    #重新排列像素点
-    [im.putpixel((x, y),line[x]) for x in range(len(line))]
-
-im.show()
-
-start_url = 'http://www.pythonchallenge.com/pc/return/mozart.html'
+info = 'the flowers are on their way'
+url = 'http://www.pythonchallenge.com/pc/stuff/violin.php'
+req = Request(url, headers={'Cookie': 'info=' + quote_plus(info)})
+print urlopen(req).read()
+start_url = 'http://www.pythonchallenge.com/pc/return/romance.html'
 # end_url = start_url.replace('bull', passcodes)
 # print end_url
