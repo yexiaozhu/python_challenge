@@ -2,36 +2,31 @@
 #coding=utf-8
 #author=yexiaozhu
 
-# import re, bz2, urllib2, urllib, cookielib
-#
-# info = []
-# cookies = cookielib.CookieJar()
-# opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
-# urllib2.install_opener(opener)
-#
-# nothing = str(12345)
-# for i in range(400):
-#     path = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?busynothing='
-#     text = urllib.urlopen(path + nothing).read()
-#     r = urllib2.Request(path + nothing)
-#     yy = str(urllib2.urlopen(r).info())
-#     info.append((re.findall('info=(.{0,4});', yy)))
-#     a = re.findall(r'(\d+)', text)
-#     print i, text ,info
-#     if a == []:
-#         break
-#     nothing = str(a[len(a) - 1])
-#
-# s = ''.join([k for i in info for k in i])
-# print s
-# print bz2.decompress(urllib.unquote_plus(s))
-from urllib2 import Request, urlopen
-from urllib import quote_plus
+# <!-- it is more obvious that what you might think -->
+# <!-- maybe consider deltas.gz -->
+import gzip, difflib
+ff = gzip.open('deltas.gz', 'r')
+deltas = ff.read()
+ff.close()
+deltas = deltas.splitlines()
+left, right = [], []
+for row in deltas:
+    left.append(row[:53])
+    right.append(row[56:])
+diff = list(difflib.ndiff(left, right))
 
-info = 'the flowers are on their way'
-url = 'http://www.pythonchallenge.com/pc/stuff/violin.php'
-req = Request(url, headers={'Cookie': 'info=' + quote_plus(info)})
-print urlopen(req).read()
-start_url = 'http://www.pythonchallenge.com/pc/return/romance.html'
-# end_url = start_url.replace('bull', passcodes)
-# print end_url
+png = ['', '', '']
+for row in diff:
+    bytes = [chr(int(byte, 16)) for byte in row[2:].split()]
+    if row[0] == '-':
+        png[0] += ''.join(bytes)
+    elif row[0] == '+':
+        png[1] += ''.join(bytes)
+    elif row[0] == ' ':
+        png[2] += ''.join(bytes)
+
+for i in range(3):
+    open('out18_%d.png' % i, 'wb').write(png[i])
+start_url = 'http://www.pythonchallenge.com/pc/return/balloons.html'
+end_url = start_url.replace('return/balloons','hex/bin' )
+print end_url
