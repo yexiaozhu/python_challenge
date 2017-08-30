@@ -2,20 +2,55 @@
 #coding=utf-8
 #author=yexiaozhu
 
-import Image, ImageDraw, ImageSequence
-img = Image.open('white.gif')
-new = Image.new('RGB', (200, 200), 'black')
+import Image, ImageDraw
+img = Image.open('maze.png').getdata()
+new = Image.new('RGBA', img.size, 'black')
 newimg = ImageDraw.Draw(new)
-x = 0
-y = 0
-for s in ImageSequence.Iterator(img):
-    l,u,r,d = img.getbbox()
-    dx = (l - 100)
-    dy = (u - 100)
-    x += dx
-    y += dy
-    if dx == dy == 0:
-        x += 30
-        y += 30
-    newimg.point((x, y))
-new.save('out22.png')
+
+for i in range(img.size[1]):
+    if img.getpixel((i, 0))[0] == 0:
+        pos = (i, 0)
+    if img.getpixel((i, img.size[0] - 1))[0] == 0:
+        endpos = (i, img.size[0] - 1)
+
+path = []
+wholepath = []
+dire = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+wall = (255,)*4
+
+while pos!=endpos:
+    img.putpixel(pos, wall)
+    flag = 0
+    newpos = pos
+    for i in dire:
+        try:
+            pp = (pos[0] + i[0], pos[1] + i[1])
+            if img.getpixel(pp)!=wall:
+                flag += 1
+                newpos = pp
+        except:
+            pass
+    if flag == 0:
+        if path == []:
+            path = wholepath.pop()
+            continue
+        pos = path[0]
+        path = []
+    elif flag>1:
+        wholepath.append(path)
+        path = [pos]
+        pos = newpos
+    else:
+        path.append(pos)
+        pos = newpos
+else:
+    path.append(pos)
+    wholepath.append(path)
+
+img = Image.open('maze.png').getdata()
+data = [(img.getpixel(k)[0],new.putpixel(k, wall)) for i in wholepath for k in i]
+out = open('out24.zip','wb')
+for i in data[1::2]:
+    out.write(chr(i[0]))
+out.close()
+new.save('out24.png')
