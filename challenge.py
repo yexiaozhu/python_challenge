@@ -1,12 +1,24 @@
 #!/usr/bin/env python 2.7.12
 #coding=utf-8
 #author=yexiaozhu
+import Image
+import re
+import urllib
 
-start_url = "http://repeat:switch@www.pythonchallenge.com/pc/ring/guido.html"
+start_url = "http://repeat:switch@www.pythonchallenge.com/pc/ring/yankeedoodle.html"
 
-import urllib, bz2
+# <font color="gold">
+# 	<br>The picture is only meant to help you relax
+# 	     <!-- while you look at the csv file -->
+# </font>
+url = 'http://repeat:switch@www.pythonchallenge.com/pc/ring/yankeedoodle.csv'
+data = re.findall(r"[\d.]+", urllib.urlopen(url).read())
+print len(data)
+new = Image.new('F',(53,139))
+new.putdata(map(float,data))
+new = new.transpose(Image.ROTATE_90)
+new = new.transpose(Image.FLIP_TOP_BOTTOM)
+new.save(r'out30.tiff')
 
-f = urllib.urlopen(start_url)
-s = [chr(len(i)-1) for i in f.readlines()[12::]]
-text = ''.join(s)
-print bz2.decompress(text)
+s = [chr(int(data[i][5]+data[i+1][5]+data[i+2][6])) for i in range(0,len(data)-2,3)]
+print ''.join(s)
