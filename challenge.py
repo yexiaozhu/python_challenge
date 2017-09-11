@@ -2,17 +2,11 @@
 #coding=utf-8
 #author=yexiaozhu
 
-# <title>many pairs ring-ring</title>
-import Image
+start_url = "http://repeat:switch@www.pythonchallenge.com/pc/ring/guido.html"
 
-img = Image.open('bell.png')
-img.load()
-r, g, b = img.split()
+import urllib, bz2
 
-gdata = list(g.getdata())
-newlist = [(gdata[i] - gdata[i + 1]) for i in range(0, len(gdata), 2)]
-s = ''
-for i in newlist:
-    if i != -42 and i != 42:
-        s += chr(abs(i))
-print s
+f = urllib.urlopen(start_url)
+s = [chr(len(i)-1) for i in f.readlines()[12::]]
+text = ''.join(s)
+print bz2.decompress(text)
