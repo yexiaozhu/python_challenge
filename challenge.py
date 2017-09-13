@@ -2,23 +2,38 @@
 #coding=utf-8
 #author=yexiaozhu
 import Image
-import re
+
+import cStringIO
 import urllib
 
-start_url = "http://repeat:switch@www.pythonchallenge.com/pc/ring/yankeedoodle.html"
+start_url = "http://repeat:switch@www.pythonchallenge.com/pc/ring/grandpa.html"
 
-# <font color="gold">
-# 	<br>The picture is only meant to help you relax
-# 	     <!-- while you look at the csv file -->
-# </font>
-url = 'http://repeat:switch@www.pythonchallenge.com/pc/ring/yankeedoodle.csv'
-data = re.findall(r"[\d.]+", urllib.urlopen(url).read())
-print len(data)
-new = Image.new('F',(53,139))
-new.putdata(map(float,data))
-new = new.transpose(Image.ROTATE_90)
-new = new.transpose(Image.FLIP_TOP_BOTTOM)
-new.save(r'out30.tiff')
+# <!-- short break, this ***REALLY*** has nothing to do with Python -->
 
-s = [chr(int(data[i][5]+data[i+1][5]+data[i+2][6])) for i in range(0,len(data)-2,3)]
-print ''.join(s)
+url = 'http://kohsamui:thailand@www.pythonchallenge.com/pc/rock/mandelbrot.gif'
+ufos = Image.open(cStringIO.StringIO(urllib.urlopen(url).read()))
+def mandelbrot(left=0.34, bottom=0.57, width=0.036, height=0.027, max=128, size=(640, 480)):
+     xstep = width / size[0]
+     ystep = height / size[1]
+     for y in xrange(size[1] - 1, -1, -1):
+         for x in xrange(size[0]):
+             c = complex(left + x * xstep, bottom + y * ystep)
+             z = 0+0j
+             for i in xrange(max):
+                 z = z * z + c
+                 if abs(z) > 2:
+                     break
+             yield i
+mandel = ufos.copy() # We can reuse the type, size and palette
+mandel.putdata(list(mandelbrot()))
+mandel.show()
+
+differences = [(a - b) for a, b in zip(ufos.getdata(), mandel.getdata()) if a != b]
+print len(differences)
+print set(differences)
+factor = lambda n: filter(lambda f: not n%f, xrange(1,n+1))
+print factor(len(differences))
+plot = Image.new('L', (23, 73))
+plot.putdata([(i < 16) and 255 or 0 for i in differences])
+# plot.resize((230, 730)).show()
+plot.save('out31.png')
